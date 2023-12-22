@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  php-apache:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["bash", "-c", "echo 'App is ready on http://localhost:80'"]
+    ports:
+      - "80:80"
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_USER: oui
+      MYSQL_PASSWORD: oui
+      MYSQL_ROOT_PASSWORD: oui
+      MYSQL_DATABASE: database
+    volumes:
+      - ./php/sql/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_USER: oui
+      MYSQL_PASSWORD: oui
