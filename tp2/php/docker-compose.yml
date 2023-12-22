@@ -5,9 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["bash", "-c", "echo 'App is ready on http://localhost:80'"]
     ports:
       - "80:80"
+    command: ["bash", "-c", "echo 'App is ready on http://localhost:80' && exec apache2-foreground"]
+
   mysql:
     image: mysql:8.0
     environment:
