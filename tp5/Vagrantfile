@@ -1,0 +1,150 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+config.vm.define "web1" do |web1|
+    web1.vm.box = "generic/rocky9"
+    web1.vm.network "private_network", type: "dhcp"
+    web1.vm.network "private_network", type: "static", ip: "10.5.1.11"
+    web1.vm.hostname = "web1.tp5.b2"
+    web1.vm.provision "shell", path: "scripts/configure_web1.sh"
+    web1.vm.synced_folder ".", "/vagrant", disabled: false
+    web1.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+    end
+  end
+config.vm.define "web2" do |web2|
+    web2.vm.box = "generic/rocky9"
+    web2.vm.network "private_network", type: "dhcp"
+    web2.vm.network "private_network", type: "static", ip: "10.5.1.12"
+    web2.vm.hostname = "web2.tp5.b2"
+    web2.vm.provision "shell", path: "scripts/configure_web1.sh"
+    web2.vm.synced_folder ".", "/vagrant", disabled: false
+    web2.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+    end
+  end
+config.vm.define "web3" do |web3|
+    web3.vm.box = "generic/rocky9"
+    web3.vm.network "private_network", type: "dhcp"
+    web3.vm.network "private_network", type: "static", ip: "10.5.1.13"
+    web3.vm.hostname = "web3.tp5.b2"
+    web3.vm.provision "shell", path: "scripts/configure_web1.sh"
+    web3.vm.synced_folder ".", "/vagrant", disabled: false
+    web3.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+    end
+  end
+
+  config.vm.define "rp1" do |rp1|
+    rp1.vm.box = "generic/rocky9"
+    rp1.vm.network "private_network", type: "dhcp"
+    rp1.vm.network "private_network", type: "static", ip: "10.5.1.111"
+    rp1.vm.hostname = "rp1.tp5.b2"
+    rp1.vm.provision "shell", path: "scripts/configure_rp1.sh"
+    rp1.vm.synced_folder ".", "/vagrant", disabled: true
+    rp1.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+    end
+  end
+config.vm.define "rp2" do |rp2|
+    rp2.vm.box = "generic/rocky9"
+    rp2.vm.network "private_network", type: "dhcp"
+    rp2.vm.network "private_network", type: "static", ip: "10.5.1.112"
+    rp2.vm.hostname = "rp2.tp5.b2"
+    rp2.vm.provision "shell", path: "scripts/configure_rp2.sh"
+    rp2.vm.synced_folder ".", "/vagrant", disabled: true
+    rp2.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+    end
+  end
+
+  config.vm.define "db1" do |db1|
+    db1.vm.box = "generic/rocky9"
+    db1.vm.network "private_network", type: "dhcp"
+    db1.vm.network "private_network", type: "static", ip: "10.5.1.211"
+    db1.vm.hostname = "db1.tp5.b2"
+    db1.vm.provision "shell", path: "scripts/configure_db1.sh"
+    db1.vm.synced_folder ".", "/vagrant", disabled: true 
+    db1.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+    end
+  end
+ config.vm.define "db2" do |db2|
+    db2.vm.box = "generic/rocky9"
+    db2.vm.network "private_network", type: "dhcp"
+    db2.vm.network "private_network", type: "static", ip: "10.5.1.212"
+    db2.vm.hostname = "db2.tp5.b2"
+    db2.vm.provision "shell", path: "scripts/configure_db2.sh"
+    db2.vm.synced_folder ".", "/vagrant", disabled: true
+    db2.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+    end
+  end
+
+end
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # Disable the default share of the current code directory. Doing this
+  # provides improved isolation between the vagrant box and your host
+  # by making sure your Vagrantfile isn't accessable to the vagrant box.
+  # If you use this you may want to enable additional shared subfolders as
+  # shown above.
+  # config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  # config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+  #   # Customize the amount of memory on the VM:
+  #   vb.memory = "1024"
+  # end
+  #
+  # View the documentation for the provider you are using for more
+  # information on available options.
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y apache2
+  # SHELL
+
