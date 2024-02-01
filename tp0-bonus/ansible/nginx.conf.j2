@@ -1,0 +1,12 @@
+server {
+    listen 443 ssl;
+    server_name oui.com;
+
+    ssl_certificate /etc/pki/tls/certs/ansible.com.crt;
+    ssl_certificate_key /etc/pki/tls/private/ansible.com.key;
+
+    location / {
+        root /var/www/tp1_site;
+        index index.html;
+    }
+}

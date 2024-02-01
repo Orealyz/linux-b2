@@ -1,0 +1,51 @@
+---
+- name: Deploy NGINX Server
+  hosts: web
+  become: true
+
+  tasks:
+    - name: Create NGINX directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - /etc/pki/tls/certs/
+        - /etc/pki/tls/private/
+        - /var/www/tp1_site
+
+    - name: Generate a Self Signed OpenSSL certificate
+      openssl_certificate:
+        path: /etc/pki/tls/certs/ansible.com.crt
+        privatekey_path: /etc/pki/tls/private/ansible.com.pem
+        provider: selfsigned
+        common_name: "oui.com"
+    - name: Create index.html
+      copy:
+        content: "Hello from NGINX over HTTPS\n"
+        dest: /var/www/tp1_site/index.html
+
+    - name: Deploy NGINX configuration
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: Reload NGINX
+
+    - name: Open port 443/TCP in firewall
+      firewalld:
+        port: 443/tcp
+        permanent: true
+        state: enabled
+      notify: Reload Firewalld
+
+  handlers:
+    - name: Reload NGINX
+      service:
+        name: nginx
+        state: reloaded
+
+    - name: Reload Firewalld
+      service:
+        name: firewalld
+        state: restarted
+
